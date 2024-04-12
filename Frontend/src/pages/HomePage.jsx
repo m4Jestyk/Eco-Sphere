@@ -1,10 +1,13 @@
 import { Button, Flex } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import userAtom from "../atoms/userAtom";
 
 const HomePage = () => {
-	// This page added after the tutorial
+	const user = useRecoilValue(userAtom);
+	console.log(user);
 	return (
-		<Link to={"/markzuckerberg"}>
+		<Link to={`/${user.username}`}>
 			<Flex w={"full"} justifyContent={"center"}>
 				<Button mx={"auto"}>Visit Profile Page</Button>
 			</Flex>
