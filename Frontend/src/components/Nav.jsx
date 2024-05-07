@@ -1,11 +1,22 @@
-import { Flex, Text, useColorMode } from "@chakra-ui/react";
+import { Flex, Text, Link, useColorMode } from "@chakra-ui/react";
+import { useRecoilValue } from "recoil";
+import userAtom from "../atoms/userAtom";
+import { AiFillHome } from "react-icons/ai";
+import { RxAvatar } from "react-icons/rx";
+import { Link as RouterLink } from "react-router-dom";
 
 const Nav = () => {
-
   const { colorMode, toggleColorMode } = useColorMode();
+  const user = useRecoilValue(userAtom);
 
   return (
-    <Flex justifyContent={"center"} mt={6} mb={12}>
+    <Flex justifyContent={"space-between"} mt={6} mb={12}>
+      {user && (
+        <Link as={RouterLink} to="/">
+          <AiFillHome size={24} />
+        </Link>
+      )}
+
       <Text
         cursor={"pointer"}
         color={colorMode === "dark" ? "white" : "black"}
@@ -14,7 +25,12 @@ const Nav = () => {
       >
         Tootar
       </Text>
-      
+
+      {user && (
+        <Link as={RouterLink} to={`${user.username}`}>
+          <RxAvatar size={24} />
+        </Link>
+      )}
     </Flex>
   );
 };

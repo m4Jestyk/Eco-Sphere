@@ -3,7 +3,7 @@ import { likeUnlike, newTweet, getTweet, deleteTweet, replyToTweet, getFeedTweet
 import { isAuthenticated } from "../middlewares/auth.js"; 
 
 const router = express.Router(); 
-
+ 
 router.get("/feed", isAuthenticated, getFeedTweets)
 
 router.post("/new", isAuthenticated, newTweet);

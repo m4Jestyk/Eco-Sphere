@@ -26,6 +26,7 @@ export default function SignupCard() {
   const setAuthScreen = useSetRecoilState(authScreenAtom);
   const showToast = useShowToast();
   const setUser = useSetRecoilState(userAtom); 
+  const [loading, setLoading] = useState(false);
   const [inputs, setInputs] = useState({
     name: "",
     username: "",
@@ -34,6 +35,7 @@ export default function SignupCard() {
 });
 
   const handleSignup = async() => {
+    setLoading(true);
     try {
         const res = await fetch("/api/v1/users/new", {
             method: "POST",
@@ -53,6 +55,8 @@ export default function SignupCard() {
         setUser(data);
     } catch (error) {
         showToast("Error", error, "error");
+    } finally {
+      setLoading(false);
     }
     
   }
@@ -117,6 +121,7 @@ export default function SignupCard() {
                   bg: useColorModeValue("gray.700", "gray.800"),
                 }}
                 onClick={handleSignup}
+                isLoading={loading}
               >
                 Sign up
               </Button>

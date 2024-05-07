@@ -3,10 +3,12 @@ import useShowToast from "../../hooks/useShowToast";
 import { useSetRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { BiPowerOff } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
 
 const LogoutButton = () => {
   const showToast = useShowToast();
-  const setUser = useSetRecoilState(userAtom);
+  const setUser = useSetRecoilState(userAtom); 
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
@@ -18,6 +20,7 @@ const LogoutButton = () => {
       });
 
       const data = await res.json();
+      console.log(data);
 
       if (data.error) {
         showToast("Error", data.error, "error");
@@ -26,6 +29,7 @@ const LogoutButton = () => {
 
       localStorage.removeItem("user-tootar");
       setUser(null);
+      navigate("/auth");
     } catch (error) {
       showToast("Error", error, "error");
     }
