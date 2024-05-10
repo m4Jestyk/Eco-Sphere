@@ -17,7 +17,7 @@ router.post("/login", login);
 
 router.get("/logout", logout);
 
-router.get("/:username", getProfile);
+router.get("/:query", getProfile);
 
 router.put("/update/:id", isAuthenticated, updateProfile)
 

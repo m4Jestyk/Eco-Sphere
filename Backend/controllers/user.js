@@ -2,6 +2,7 @@ import { User } from "../models/user.js";
 import bcrypt from "bcrypt";
 import tokenHelper from "../utils/helpers/tokenHelper.js";
 import {v2 as cloudinary} from "cloudinary"
+import mongoose from "mongoose";
 
 export const createUser = async (req, res, next) => {
   try {
@@ -96,11 +97,20 @@ export const logout = async (req, res, next) => {
 };
 
 export const getProfile = async (req, res, next) => {
-  const { username } = req.params;
+  //WE WILL FETCH USER USING EITHER USERID OR USERNAME
+  //  query CAN BE EITHER USERID OR USERNAME
+  const { query } = req.params;
   try {
-    const user = await User.findOne({ username })
-      .select("-password")
-      .select("-updatedAt");
+    
+     let user;
+
+     //query is userId
+     if(mongoose.Types.ObjectId.isValid(query)){
+      user = await User.findOne({_id: query}).select("-password").select("-updatedAt")
+     } else {
+      //query is a username
+      user = await User.findOne({username: query}).select("-password").select("-updatedAt")
+     }
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
