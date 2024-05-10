@@ -29,7 +29,7 @@ export const newTweet = async (req, res, next) => {
     const newPost = new Tweet({ postedBy, text });
     await newPost.save();
 
-    res.status(201).json({ message: "Post created successfully", newPost });
+    res.status(201).json( newPost );
   } catch (error) {
     res.status(500).json({ error: error.message });
     console.log(error);
@@ -124,7 +124,7 @@ export const replyToTweet = async(req, res, next) => {
     tweet.replies.push(reply);
     await tweet.save();
 
-    res.status(200).json({ message: "Reply added successfully", tweet });
+    res.status(200).json( reply );
 }
 
 export const getFeedTweets = async(req, res, next) => {

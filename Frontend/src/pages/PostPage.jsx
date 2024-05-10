@@ -15,17 +15,20 @@ import useGetUserProfile from "../../hooks/useGetProfile";
 import useShowToast from "../../hooks/useShowToast";
 import { useNavigate, useParams } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { DeleteIcon } from "@chakra-ui/icons";
+import postAtom from "../atoms/postAtom";
 
 const PostPage = () => {
   const { user, loading } = useGetUserProfile();
-  const [post, setPost] = useState(null);
+  const [posts, setPosts] = useRecoilState(postAtom);
   const showToast = useShowToast();
   const { pid } = useParams();
   const currentUser = useRecoilValue(userAtom);
   const navigate = useNavigate();
+  const currentPost = posts[0];
+  console.log(currentPost);
 
   useEffect(() => {
     const getPost = async () => {
@@ -35,22 +38,22 @@ const PostPage = () => {
         if (data.error) {
           showToast("Error", data.error, "error");
           return;
-        }
+        } 
         console.log(data);
-        setPost(data);
+        setPosts([data]);
         console.log(data)
       } catch (error) {
         showToast("Error", error.message, "error");
       }
     };
     getPost();
-  }, [showToast, pid]);
+  }, [showToast, pid, setPosts]);
 
   const handleDeletePost = async () => {
     try {
       if (!window.confirm("Are you sure you want to delete this post?")) return;
 
-      const res = await fetch(`/api/v1/tweets/${post._id}`, {
+      const res = await fetch(`/api/v1/tweets/${currentPost._id}`, {
         method: "DELETE",
       });
       const data = await res.json();
@@ -73,7 +76,7 @@ const PostPage = () => {
     );
   }
 
-  if (!post) return null;
+  if (!currentPost) return null;
 
   return (
     <>
@@ -95,7 +98,7 @@ const PostPage = () => {
             textAlign={"right"}
             color={"gray.light"}
           >
-            {post.tweet.createdAt && formatDistanceToNow(new Date(post.tweet.createdAt))}{" "}
+            {currentPost.tweet.createdAt && formatDistanceToNow(new Date(currentPost.tweet.createdAt))}{" "}
             ago
           </Text>
 
@@ -109,31 +112,31 @@ const PostPage = () => {
         </Flex>
       </Flex>
 
-      <Text my={3}>{post.tweet.text}</Text>
+      <Text my={3}>{currentPost.tweet.text}</Text>
 
-      {post.tweet.img && (
+      {currentPost.tweet.img && (
         <Box
           borderRadius={6}
           overflow={"hidden"}
           border={"1px solid"}
           borderColor={"gray.light"}
         >
-          <Image src={post.tweet.img} w={"full"} />
+          <Image src={currentPost.tweet.img} w={"full"} />
         </Box>
       )}
 
       <Flex gap={3} my={3}>
-        <Actions post={post.tweet} />
+        <Actions post={currentPost.tweet} />
       </Flex>
 
       <Divider my={4} />
 
       <Divider my={4} />
-      {post.tweet.replies?.map((reply) => (
+      {currentPost.tweet.replies?.map((reply) => (
         <Comment
           key={reply._id}
           reply={reply}
-          lastReply={reply._id === post.tweet.replies[post.tweet.replies.length - 1]._id}
+          lastReply={reply._id === currentPost.tweet.replies[currentPost.tweet.replies.length - 1]._id}
         />
       ))}
     </>
