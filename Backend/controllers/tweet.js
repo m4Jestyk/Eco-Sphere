@@ -44,10 +44,7 @@ export const getTweet = async (req, res) => {
       return res.status(400).json({ error: "Post not found" });
     }
 
-    res.status(200).json({
-      success: true,
-      tweet,
-    });
+    res.status(200).json(tweet);
   } catch (error) {
     console.log(error);
   }
@@ -126,7 +123,7 @@ export const replyToTweet = async(req, res, next) => {
 
     res.status(200).json( reply );
 }
-
+ 
 export const getFeedTweets = async(req, res, next) => {
     try {
 		const userId = req.user._id;

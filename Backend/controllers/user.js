@@ -78,7 +78,7 @@ export const login = async (req, res, next) => {
       profilePic: user.profilePic,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.message });
     console.log("Error in loginUser: ", error.message);
   }
 };

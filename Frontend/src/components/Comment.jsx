@@ -1,7 +1,7 @@
 import { Avatar, Divider, Flex, Text } from "@chakra-ui/react";
 
 const Comment = ({ reply, lastReply }) => {
-	console.log("comment rendered")
+	// console.log("comment rendered")
 	return (
 		<>
 			<Flex gap={4} py={2} my={2} w={"full"}>

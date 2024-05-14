@@ -11,7 +11,7 @@ import {
 import Actions from "../components/Actions";
 import { useEffect, useState } from "react";
 import Comment from "../components/Comment"
-import useGetUserProfile from "../../hooks/useGetProfile";
+import useGetProfile from "../../hooks/useGetProfile";
 import useShowToast from "../../hooks/useShowToast";
 import { useNavigate, useParams } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
@@ -21,17 +21,17 @@ import { DeleteIcon } from "@chakra-ui/icons";
 import postAtom from "../atoms/postAtom";
 
 const PostPage = () => {
-  const { user, loading } = useGetUserProfile();
+  const { user, loading } = useGetProfile();
   const [posts, setPosts] = useRecoilState(postAtom);
   const showToast = useShowToast();
   const { pid } = useParams();
   const currentUser = useRecoilValue(userAtom);
   const navigate = useNavigate();
   const currentPost = posts[0];
-  console.log(currentPost);
 
   useEffect(() => {
     const getPost = async () => {
+      setPosts([]);
       try {
         const res = await fetch(`/api/v1/tweets/${pid}`);
         const data = await res.json();
@@ -39,9 +39,7 @@ const PostPage = () => {
           showToast("Error", data.error, "error");
           return;
         } 
-        console.log(data);
         setPosts([data]);
-        console.log(data)
       } catch (error) {
         showToast("Error", error.message, "error");
       }
@@ -98,7 +96,7 @@ const PostPage = () => {
             textAlign={"right"}
             color={"gray.light"}
           >
-            {currentPost.tweet.createdAt && formatDistanceToNow(new Date(currentPost.tweet.createdAt))}{" "}
+            {currentPost.createdAt && formatDistanceToNow(new Date(currentPost.createdAt))}{" "}
             ago
           </Text>
 
@@ -112,31 +110,31 @@ const PostPage = () => {
         </Flex>
       </Flex>
 
-      <Text my={3}>{currentPost.tweet.text}</Text>
+      <Text my={3}>{currentPost.text}</Text>
 
-      {currentPost.tweet.img && (
+      {currentPost.img && (
         <Box
           borderRadius={6}
           overflow={"hidden"}
           border={"1px solid"}
           borderColor={"gray.light"}
         >
-          <Image src={currentPost.tweet.img} w={"full"} />
+          <Image src={currentPost.img} w={"full"} />
         </Box>
       )}
 
       <Flex gap={3} my={3}>
-        <Actions post={currentPost.tweet} />
+        <Actions post={currentPost} />
       </Flex>
 
       <Divider my={4} />
 
       <Divider my={4} />
-      {currentPost.tweet.replies?.map((reply) => (
+      {currentPost.replies?.map((reply) => (
         <Comment
           key={reply._id}
           reply={reply}
-          lastReply={reply._id === currentPost.tweet.replies[currentPost.tweet.replies.length - 1]._id}
+          lastReply={reply._id === currentPost.replies[currentPost.replies.length - 1]._id}
         />
       ))}
     </>
