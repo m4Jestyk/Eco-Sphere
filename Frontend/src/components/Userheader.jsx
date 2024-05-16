@@ -2,7 +2,7 @@ import { Avatar } from "@chakra-ui/avatar";
 import { Box, Flex, Link, Text, VStack } from "@chakra-ui/layout";
 import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
 import { Portal } from "@chakra-ui/portal";
-import { Button, useToast } from "@chakra-ui/react";
+import { Button, useToast, useColorMode } from "@chakra-ui/react";
 import { BsInstagram } from "react-icons/bs";
 import { CgMoreO } from "react-icons/cg";
 import { useRecoilValue } from "recoil";
@@ -19,13 +19,14 @@ const UserHeader = ({ user }) => {
   );
   const showToast = useShowToast();
   const [updating, setUpdating] = useState(false);
+  const { colorMode } = useColorMode();
 
   const handleFlwUnflow = async () => {
     if (!currentUser) {
       showToast("Error", "You need to login first", "error");
       return;
     }
-	if(updating) return;
+    if (updating) return;
     setUpdating(true);
     try {
       const res = await fetch(`api/v1/users/follow/${user._id}`, {
@@ -78,7 +79,6 @@ const UserHeader = ({ user }) => {
           </Text>
           <Flex gap={2} alignItems={"center"}>
             <Text fontSize={"sm"}>{user.name}</Text>
-            
           </Flex>
         </Box>
         <Box>
@@ -104,7 +104,7 @@ const UserHeader = ({ user }) => {
         </Box>
       </Flex>
 
-      <Text>{user.bio}</Text>
+      <Text color={colorMode === "dark" ? "black" : "white"}>{user.bio}</Text>
 
       {currentUser?._id === user._id && (
         <Link as={RouterLink} to="/update">
@@ -112,16 +112,22 @@ const UserHeader = ({ user }) => {
         </Link>
       )}
       {currentUser?._id !== user._id && (
-        <Button size={"sm"} onClick={handleFlwUnflow} isLoading={updating}>
-          {following ? "Unfollow" : "Follow"}
+        <Button
+          color={colorMode === "dark" ? "black" : "black"}
+          size={"sm"}
+          onClick={handleFlwUnflow}
+          isLoading={updating}
+        >
+          {following ? "Disconnect" : "Connect"}
         </Button>
       )}
       <Flex w={"full"} justifyContent={"space-between"}>
         <Flex gap={2} alignItems={"center"}>
-          <Text color={"gray.light"}>{user.followers.length} followers</Text>
+          <Text color={colorMode === "dark" ? "black" : "white"}>
+            {user.followers.length} Connections
+          </Text>
         </Flex>
         <Flex>
-          
           <Box className="icon-container">
             <Menu>
               <MenuButton>
@@ -147,7 +153,7 @@ const UserHeader = ({ user }) => {
           pb="3"
           cursor={"pointer"}
         >
-          <Text fontWeight={"bold"}> Posts</Text>
+          <Text fontWeight={"bold"}> Echoes</Text>
         </Flex>
         <Flex
           flex={1}
@@ -156,8 +162,7 @@ const UserHeader = ({ user }) => {
           color={"gray.light"}
           pb="3"
           cursor={"pointer"}
-        >
-        </Flex>
+        ></Flex>
       </Flex>
     </VStack>
   );

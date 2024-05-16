@@ -26,17 +26,17 @@ const Nav = () => {
         <Link as={RouterLink} to={"/auth"} onClick={
           ()=>setAuthScreen('login')
         }>
-          Login
+          ReEnter Sphere
         </Link>
       )}
 
       <Text
         cursor={"pointer"}
-        color={colorMode === "dark" ? "white" : "black"}
+        color={colorMode === "dark" ? "black" : "white"}
         onClick={toggleColorMode}
         className="text-3xl font-bold"
       >
-        Tootar
+        EchoSphere
       </Text>
 
       {user && (
@@ -55,7 +55,7 @@ const Nav = () => {
         <Link as={RouterLink} to={"/auth"} onClick={
           ()=>setAuthScreen('signup')
         }>
-          Sign Up
+          Get Started
         </Link>
       )}
     </Flex>

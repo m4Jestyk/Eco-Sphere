@@ -10,12 +10,13 @@ import {
   Stack,
   Button,
   Heading,
+  useColorMode,
   Text,
   useColorModeValue,
   Link,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import useShowToast from "../../hooks/useShowToast.js"
+import useShowToast from "../../hooks/useShowToast.js";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useSetRecoilState } from "recoil";
 import authScreenAtom from "../atoms/authAtom";
@@ -25,47 +26,55 @@ export default function SignupCard() {
   const [showPassword, setShowPassword] = useState(false);
   const setAuthScreen = useSetRecoilState(authScreenAtom);
   const showToast = useShowToast();
-  const setUser = useSetRecoilState(userAtom); 
+  const setUser = useSetRecoilState(userAtom);
   const [loading, setLoading] = useState(false);
   const [inputs, setInputs] = useState({
     name: "",
     username: "",
     email: "",
     password: "",
-});
+  });
+  const { colorMode } = useColorMode();
 
-  const handleSignup = async() => {
+  const handleSignup = async () => {
     setLoading(true);
     try {
-        const res = await fetch("/api/v1/users/new", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(inputs)
-        });
-        const data = await res.json();
-    
-        if (data.error) {
-            showToast("Error", data.error, "error");
-            return;
-        }
-    
-        localStorage.setItem("user-tootar", JSON.stringify(data));
-        setUser(data);
+      const res = await fetch("/api/v1/users/new", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(inputs),
+      });
+      const data = await res.json();
+
+      if (data.error) {
+        showToast("Error", data.error, "error");
+        return;
+      }
+
+      localStorage.setItem("user-tootar", JSON.stringify(data));
+      setUser(data);
     } catch (error) {
-        showToast("Error", error, "error");
+      showToast("Error", error, "error");
     } finally {
       setLoading(false);
     }
-    
-  }
+  };
 
   return (
-    <Flex align={"center"} justify={"center"}>
+    <Flex
+      align={"center"}
+      justify={"center"}
+      color={colorMode === "dark" ? "white" : "black"}
+    >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
-          <Heading fontSize={"4xl"} textAlign={"center"}>
+          <Heading
+            color={colorMode === "dark" ? "black" : "white"}
+            fontSize={"4xl"}
+            textAlign={"center"}
+          >
             Sign up
           </Heading>
         </Stack>
@@ -80,25 +89,44 @@ export default function SignupCard() {
               <Box>
                 <FormControl isRequired>
                   <FormLabel>Name</FormLabel>
-                  <Input onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
-			 type="text" />
+                  <Input
+                    onChange={(e) =>
+                      setInputs({ ...inputs, name: e.target.value })
+                    }
+                    type="text"
+                  />
                 </FormControl>
               </Box>
               <Box>
                 <FormControl isRequired>
                   <FormLabel>Username</FormLabel>
-                  <Input onChange={(e) => setInputs({ ...inputs, username: e.target.value })} type="text" />
+                  <Input
+                    onChange={(e) =>
+                      setInputs({ ...inputs, username: e.target.value })
+                    }
+                    type="text"
+                  />
                 </FormControl>
               </Box>
             </HStack>
             <FormControl isRequired>
               <FormLabel>Email address</FormLabel>
-              <Input onChange={(e) => setInputs({ ...inputs, email: e.target.value })} type="email" />
+              <Input
+                onChange={(e) =>
+                  setInputs({ ...inputs, email: e.target.value })
+                }
+                type="email"
+              />
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Password</FormLabel>
               <InputGroup>
-                <Input onChange={(e) => setInputs({ ...inputs, password: e.target.value })} type={showPassword ? "text" : "password"} />
+                <Input
+                  onChange={(e) =>
+                    setInputs({ ...inputs, password: e.target.value })
+                  }
+                  type={showPassword ? "text" : "password"}
+                />
                 <InputRightElement h={"full"}>
                   <Button
                     variant={"ghost"}

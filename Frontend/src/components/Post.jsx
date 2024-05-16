@@ -10,12 +10,14 @@ import { DeleteIcon } from "@chakra-ui/icons";
 import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import postAtom from "../atoms/postAtom";
+import { useColorMode } from "@chakra-ui/react";
 
 const Post = ({ post, postedBy }) => {
   const [user, setUser] = useState(null);
   const showToast = useShowToast();
   const currentUser = useRecoilValue(userAtom);
   const [posts, setPosts] = useRecoilState(postAtom);
+  const { colorMode } = useColorMode();
 
   const navigate = useNavigate();
 
@@ -41,7 +43,7 @@ const Post = ({ post, postedBy }) => {
   const handleDeletePost = async (e) => {
     try {
       e.preventDefault();
-      if (!window.confirm("Are you sure you want to delete this post?")) return;
+      if (!window.confirm("Are you sure you want to stop this echo?")) return;
 
       const res = await fetch(`/api/v1/tweets/${post._id}`, {
         method: "DELETE",
@@ -51,7 +53,7 @@ const Post = ({ post, postedBy }) => {
         showToast("Error", data.error, "error");
         return;
       }
-      showToast("Success", "Post deleted", "success");
+      showToast("Success", "Echo was silenced", "success");
       setPosts(posts.filter((p) => p._id !== post._id));
     } catch (error) {
       showToast("Error", error.message, "error");
@@ -74,7 +76,7 @@ const Post = ({ post, postedBy }) => {
           />
           <Box w="1px" h={"full"} bg="gray.light" my={2}></Box>
           <Box position={"relative"} w={"full"}>
-            {post.replies.length === 0 && <Text textAlign={"center"}>🥱</Text>}
+            {post.replies.length === 0 && <Text textAlign={"center"}>💤</Text>}
             {post.replies[0] && (
               <Avatar
                 size="xs"
@@ -116,7 +118,7 @@ const Post = ({ post, postedBy }) => {
           <Flex justifyContent={"space-between"} w={"full"}>
             <Flex w={"full"} alignItems={"center"}>
               <Text
-                fontSize={"sm"}
+                fontSize={"xl"}
                 fontWeight={"bold"}
                 onClick={(e) => {
                   e.preventDefault();
@@ -125,16 +127,20 @@ const Post = ({ post, postedBy }) => {
               >
                 {user?.username}
               </Text>
-              <Image src="/verified.png" w={4} h={4} ml={1} />
+              &nbsp;
+              <Text fontSize={"xs"} fontWeight={"bold"}>
+                echoed
+              </Text>
+              {/* <Image src="/verified.png" w={4} h={4} ml={1} /> */}
             </Flex>
             <Flex gap={4} alignItems={"center"}>
               <Text
                 fontSize={"xs"}
                 width={36}
                 textAlign={"right"}
-                color={"gray.light"}
+                color={colorMode === "dark" ? "black" : "white"}
               >
-                {formatDistanceToNow(new Date(post.createdAt))} ago
+                echoed {formatDistanceToNow(new Date(post.createdAt))} ago
               </Text>
 
               {currentUser?._id === user._id && (

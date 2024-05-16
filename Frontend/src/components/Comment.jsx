@@ -9,7 +9,7 @@ const Comment = ({ reply, lastReply }) => {
 				<Flex gap={1} w={"full"} flexDirection={"column"}>
 					<Flex w={"full"} justifyContent={"space-between"} alignItems={"center"}>
 						<Text fontSize='sm' fontWeight='bold'>
-							{reply.username}
+							{reply.username}'s reverb:
 						</Text>
 					</Flex>
 					<Text>{reply.text}</Text>

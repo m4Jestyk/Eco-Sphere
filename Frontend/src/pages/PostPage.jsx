@@ -49,7 +49,7 @@ const PostPage = () => {
 
   const handleDeletePost = async () => {
     try {
-      if (!window.confirm("Are you sure you want to delete this post?")) return;
+      if (!window.confirm("Are you sure you want to stop this echo?")) return;
 
       const res = await fetch(`/api/v1/tweets/${currentPost._id}`, {
         method: "DELETE",
@@ -59,7 +59,7 @@ const PostPage = () => {
         showToast("Error", data.error, "error");
         return;
       }
-      showToast("Success", "Post deleted", "success");
+      showToast("Success", "Echo Silenced...", "success");
       navigate(`/${user.username}`);
     } catch (error) {
       showToast("Error", error.message, "error");
@@ -81,11 +81,15 @@ const PostPage = () => {
       <Flex>
         <Flex w={"full"} alignItems={"center"} gap={3}>
           <Avatar src={user.profilePic} size={"md"} name="Mark Zuckerberg" />
-          <Flex>
-            <Text fontSize={"sm"} fontWeight={"bold"}>
+          <Flex alignItems={"center"}>
+            <Text fontSize={"2xl"} fontWeight={"bold"}>
               {user.username}
             </Text>
-            <Image src="/verified.png" w="4" h={4} ml={4} />
+            &nbsp;
+            {/* <Image src="/verified.png" w="4" h={4} ml={4} /> */}
+            <Text fontSize={"m"} fontWeight={"bold"}>
+              echoed
+            </Text>
           </Flex>
         </Flex>
         <Flex gap={4} alignItems={"center"}>
@@ -96,7 +100,7 @@ const PostPage = () => {
             textAlign={"right"}
             color={"gray.light"}
           >
-            {currentPost.createdAt && formatDistanceToNow(new Date(currentPost.createdAt))}{" "}
+            echoed {currentPost.createdAt && formatDistanceToNow(new Date(currentPost.createdAt))}{" "}
             ago
           </Text>
 

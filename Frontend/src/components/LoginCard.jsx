@@ -6,7 +6,8 @@ import {
   Input,
   InputGroup,
   HStack,
-  InputRightElement,
+  InputRightElement, 
+  useColorMode,
   Stack,
   Button,
   Heading,
@@ -29,40 +30,50 @@ export default function LoginCard() {
   const [inputs, setInputs] = useState({
     username: "",
     password: "",
-  })
+  });
+  const { colorMode } = useColorMode();
 
   const showToast = useShowToast();
- 
-  const handleLogin = async() => {
+
+  const handleLogin = async () => {
+    console.log(inputs);
     setLoading(true);
     try {
-        const res = await fetch("/api/v1/users/login",{
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(inputs)
-        });
-        const data = await res.json();
-        if(data.error){
-            showToast("Error", data.error, "error");
-            return;
-        }
-        console.log(data);
-        localStorage.setItem("user-tootar", JSON.stringify(data));
-        setUser(data);
+      const res = await fetch("/api/v1/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(inputs),
+      });
+      const data = await res.json();
+      if (data.error) {
+        showToast("Error", data.error, "error");
+        return;
+      }
+      console.log(data);
+      localStorage.setItem("user-tootar", JSON.stringify(data));
+      setUser(data);
     } catch (error) {
-        showToast("Error", error, "error");
+      showToast("Error", error, "error");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <Flex align={"center"} justify={"center"}>
+    <Flex
+      align={"center"}
+      justify={"center"}
+      color={colorMode === "dark" ? "white" : "black"}
+    >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
-          <Heading fontSize={"4xl"} textAlign={"center"}>
+          <Heading
+            color={colorMode === "dark" ? "black" : "white"}
+            fontSize={"4xl"}
+            textAlign={"center"}
+          >
             Login
           </Heading>
         </Stack>
@@ -76,12 +87,28 @@ export default function LoginCard() {
           <Stack spacing={4}>
             <FormControl isRequired>
               <FormLabel>Username</FormLabel>
-              <Input onChange={(e) => setInputs((inputs) => ({ ...inputs, username: e.target.value }))} type="text" />
+              <Input
+                onChange={(e) =>
+                  setInputs((inputs) => ({
+                    ...inputs,
+                    username: e.target.value,
+                  }))
+                }
+                type="text"
+              />
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Password</FormLabel>
               <InputGroup>
-                <Input onChange={(e) => setInputs((inputs) => ({ ...inputs, password: e.target.value }))} type={showPassword ? "text" : "password"} />
+                <Input
+                  onChange={(e) =>
+                    setInputs((inputs) => ({
+                      ...inputs,
+                      password: e.target.value,
+                    }))
+                  }
+                  type={showPassword ? "text" : "password"}
+                />
                 <InputRightElement h={"full"}>
                   <Button
                     variant={"ghost"}
@@ -116,7 +143,7 @@ export default function LoginCard() {
                   color={"blue.400"}
                   onClick={() => setAuthScreen("signup")}
                 >
-                  Signup
+                  Get Started
                 </Link>
               </Text>
             </Stack>

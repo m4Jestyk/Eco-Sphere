@@ -14,6 +14,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  useColorMode,
   Textarea,
   useColorModeValue,
   useDisclosure,
@@ -38,7 +39,8 @@ const CreatePost = () => {
   const showToast = useShowToast();
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useRecoilState(postAtom);
-  const {username} = useParams();
+  const { username } = useParams();
+  const { colorMode } = useColorMode();
 
   const handleTextChange = (e) => {
     const inputText = e.target.value;
@@ -65,12 +67,12 @@ const CreatePost = () => {
       });
 
       const data = await res.json();
-      console.log(data);
+      // console.log(data);
       if (data.error) {
         showToast("Error", data.error, "error");
         return;
       }
-      showToast("Success", "Post created successfully", "success");
+      showToast("Success", "Hear that? You just echoed", "success");
 
       if (username === user.username) {
         setPosts([data, ...posts]);
@@ -95,21 +97,24 @@ const CreatePost = () => {
         bg={useColorModeValue("gray.300", "gray.dark")}
         onClick={onOpen}
       >
-        Post
+        ECHO!
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
+        <ModalOverlay color={"black"} />
 
         <ModalContent>
-          <ModalHeader>Create Post</ModalHeader>
+          <ModalHeader color={colorMode === "dark" ? "white" : "black"}>
+            What do you want to echo?
+          </ModalHeader>
           <ModalCloseButton />
-          <ModalBody pb={6}>
+          <ModalBody pb={6} color={"black"}>
             <FormControl>
               <Textarea
-                placeholder="Post content goes here.."
+                placeholder="Echoing content goes here.."
                 onChange={handleTextChange}
                 value={postText}
+                color={colorMode === "dark" ? "white" : "black"}
               />
               <Text
                 fontSize="xs"
@@ -158,7 +163,7 @@ const CreatePost = () => {
               onClick={handleCreatePost}
               isLoading={loading}
             >
-              Post
+              Echo it!
             </Button>
           </ModalFooter>
         </ModalContent>

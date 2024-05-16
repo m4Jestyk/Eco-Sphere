@@ -7,20 +7,24 @@ import {
   Input,
   Stack,
   useColorModeValue,
+  useColorMode,
   Avatar,
   Center,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
 import usePreviewImg from "../../hooks/usePreviewImg";
 import useShowToast from "../../hooks/useShowToast";
+import { useNavigate } from "react-router-dom";
 
 export default function UpdateProfilePage() {
   const { handleImageChange, imgUrl } = usePreviewImg();
   const showToast = useShowToast();
   const fileRef = useRef(null);
   const [updating, setUpdating] = useState(false);
+  const { colorMode } = useColorMode();
+  const navigate = useNavigate();
 
   const [user, setUser] = useRecoilState(userAtom);
   const [inputs, setInputs] = useState({
@@ -33,33 +37,32 @@ export default function UpdateProfilePage() {
 
   console.log(user);
 
-  const handleSubmit =async(e)=> {
+  const handleSubmit = async (e) => {
     try {
-        e.preventDefault();
-        if(updating) return;
-        setUpdating(true);
-        const res = await fetch(`api/v1/users/update/${user._id}`,{
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({...inputs, profilePic: imgUrl})
-            }     
-        )
-        const data = await res.json();    //Updated user obj
-        if(data.error){
-            showToast("Error", data.error, "error");
-            return;
-        }
-        showToast("Woohooo!", data.message, "success");
-        setUser(data);
-        localStorage.setItem("user-tootar", JSON.stringify(data));
+      e.preventDefault();
+      if (updating) return;
+      setUpdating(true);
+      const res = await fetch(`api/v1/users/update/${user._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...inputs, profilePic: imgUrl }),
+      });
+      const data = await res.json(); //Updated user obj
+      if (data.error) {
+        showToast("Error", data.error, "error");
+        return;
+      }
+      showToast("Woohooo!", data.message, "success");
+      setUser(data.user);
+      localStorage.setItem("user-tootar", JSON.stringify(data));
     } catch (error) {
-        showToast("Error", error, "error")
-    } finally{
+      showToast("Error", error, "error");
+    } finally {
       setUpdating(false);
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -72,14 +75,23 @@ export default function UpdateProfilePage() {
           rounded={"xl"}
           boxShadow={"lg"}
           p={6}
+          color={colorMode === "dark" ? "white" : "black"}
         >
-          <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
+          <Heading
+            color={colorMode === "dark" ? "white" : "black"}
+            lineHeight={1.1}
+            fontSize={{ base: "2xl", sm: "3xl" }}
+          >
             User Profile Edit
           </Heading>
           <FormControl id="userName">
             <Stack direction={["column", "row"]} spacing={6}>
               <Center>
-                <Avatar size="xl" boxShadow={"md"} src={imgUrl || user.profilePic} />
+                <Avatar
+                  size="xl"
+                  boxShadow={"md"}
+                  src={imgUrl || user.profilePic}
+                />
               </Center>
               <Center w="full">
                 <Button w="full" onClick={() => fileRef.current.click()}>
@@ -156,6 +168,7 @@ export default function UpdateProfilePage() {
               _hover={{
                 bg: "red.500",
               }}
+              onClick={()=>navigate(-1)}
             >
               Cancel
             </Button>

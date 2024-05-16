@@ -52,14 +52,15 @@ export const login = async (req, res, next) => {
     const { username, password } = req.body;
 
     const user = await User.findOne({ username });
-
-    const isPwCorrect = await bcrypt.compare(password, user.password || "");
-
+    
     if (!user) {
       return res.json({
         error: "User doesnt exist",
       });
     }
+    
+    const isPwCorrect = await bcrypt.compare(password, user.password || "");
+
 
     if (!isPwCorrect) {
       return res.json({

@@ -32,7 +32,7 @@ const HomePage = () => {
   }, [showToast, setPosts]);
 
   return (
-    <>
+    <div>
       {!loading && posts.length === 0 && (
         <h1>You need to follow someone to something here...</h1>
       )}
@@ -46,7 +46,7 @@ const HomePage = () => {
       {posts.map((post) => (
         <Post key={post._id} post={post} postedBy={post.postedBy} />
       ))}
-    </>
+    </div>
   );
 };
 
