@@ -13,11 +13,7 @@ const styles = {
       color: mode("#FFD700", "#3A3A3A")(props), // Retro gold for light mode, Dark gray for dark mode
       bg: mode("#000000", "#E5E5E5")(props), // Black for light mode, Light gray for dark mode
       fontFamily: "'Press Start 2P', monospace",
-      // fontFamily: "'Pixelify Sans', monospace", // Pixelated font choice
-      // textRendering: "optimizeSpeed", // Ensures crisp rendering
-      // imageRendering: "pixelated", // Renders images in a pixelated manner
       letterSpacing: "0.05em", // Pixelated letter spacing
-      // textShadow: mode("0 0 5px #000000", "0 0 5px #FFFFFF")(props), // Subtle text shadow for light mode, Dark mode
       transition: "color 0.3s, background-color 0.3s", // Smooth color transitions
     },
     a: {
