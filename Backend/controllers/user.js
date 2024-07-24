@@ -58,7 +58,7 @@ export const login = async (req, res, next) => {
         error: "User doesnt exist",
       });
     }
-    
+     
     const isPwCorrect = await bcrypt.compare(password, user.password || "");
 
 

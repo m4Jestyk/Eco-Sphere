@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-
+ 
 const tokenHelper = (userId, res) => {
     const token = jwt.sign({userId}, "atharvKey", {
         expiresIn: "15d",

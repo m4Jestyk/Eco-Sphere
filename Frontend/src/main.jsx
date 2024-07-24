@@ -36,7 +36,7 @@ const colors = {
     dark: "#1A1A1A",
   },
 };
-
+ 
 
 const theme = extendTheme({ config, styles, colors });
 
